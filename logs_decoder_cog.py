@@ -31,11 +31,18 @@ class LogsCheckerCog(commands.Cog):
                     data_dict[event][split[0]] = split[1]
         return data_dict
 
-    @commands.command(name="read_logs", descriprion="Прочесть логи.")
+    @commands.command(name="get_logs", descriprion="Прочесть логи.")
     async def read_logs(self, ctx: discord.ApplicationContext):
-        if not ctx.message.attachments:
-            return
-        attachment = ctx.message.attachments[0]
+
+        if ctx.message.reference:
+            original = await ctx.fetch_message(ctx.message.reference.message_id)
+            if not original.attachments:
+                return
+            attachment = original.attachments[0]
+        else:
+            if not ctx.message.attachments:
+                return
+            attachment = ctx.message.attachments[0]
         if not attachment.filename.endswith(".ds"):
             return
         file = await attachment.read()
@@ -44,7 +51,6 @@ class LogsCheckerCog(commands.Cog):
         if len(parsed_logs) < 1:
             await ctx.channel.send("Завершений работы с ошибкой не обнаружено.")
             return
-        print(parsed_logs)
 
         embed = discord.Embed(
             title="Логи завершения работы.",
