@@ -56,4 +56,7 @@ class LogsCheckerCog(commands.Cog):
             ['Description']}\nДата: {parsed_logs[log]['Date']}"
                                                   f" \nКод: {parsed_logs[log]["Event ID"]}\n", inline=False)
 
-        await ctx.channel.send(embed=embed)
+        try:
+            await ctx.author.send(embed=embed)
+        except:
+            await ctx.channel.send(f"{ctx.author.mention}, похоже у вас закрыт лс. Откройте лс и повторите попытку.")
