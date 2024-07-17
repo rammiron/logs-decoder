@@ -14,21 +14,23 @@ class LogsCheckerCog(commands.Cog):
         index = 0.1
         for line in data.splitlines():
             split = line.strip("   ").split(":", maxsplit=1)
-            if len(split) > 1:
-                if split[0].startswith("Event["):
-                    if split[0] in data_dict.keys():
-                        event = f"Event[{index}]"
-                        data_dict[event] = {}
-                        index += 1
-                        continue
-                    event = split[0]
+            if len(split) == 0:
+                continue
+            if split[0].startswith("Event["):
+                if split[0] in data_dict.keys():
+                    event = f"Event[{index}]"
                     data_dict[event] = {}
+                    index += 1
                     continue
-                if (split[0].startswith("Предыдущее завершение работы системы") or
-                        split[0].startswith("Система перезагрузилась") and event != ""):
-                    data_dict[event]["Description"] = split[0] + ":" + split[1]
-                if event != "":
-                    data_dict[event][split[0]] = split[1]
+                event = split[0]
+                data_dict[event] = {}
+                continue
+
+            if (split[0].startswith("Предыдущее завершение работы системы") or
+                    split[0].startswith("Система перезагрузилась") and event != ""):
+                data_dict[event]["Description"] = split[0] + ":" + split[1]
+            if event != "":
+                data_dict[event][split[0]] = split[1]
         return data_dict
 
     @commands.command(name="get_logs", descriprion="Прочесть логи.")
