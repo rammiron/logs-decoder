@@ -54,6 +54,9 @@ class LogsCheckerCog(commands.Cog):
                           "Сам файл разработан нашими программистами,"
                           " не содержит вирусов, "
                           "но для большей уверенности проверен на вирусы с помощью сервиса virustotal.\n"
+                          "-> [ТЫК](https://www.virustotal.com/gui/file"
+                          "/d34729fdec9fcb647ea54cdc43b362aee983c60dcce104917c61bf9f6c0ca4cf)"
+                          "\n"
                           "Просим отправить в этот чат сгенерированный файл.")
         await ctx.channel.send("Файл: ", file=file)
 
