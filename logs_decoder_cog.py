@@ -38,7 +38,8 @@ class LogsCheckerCog(commands.Cog):
                     split[0].startswith("Система перезагрузилась") and event != ""):
                 data_dict[event]["Description"] = split[0] + ":" + split[1]
             if event != "":
-                data_dict[event][split[0]] = split[1]
+                if len(split) > 1:
+                    data_dict[event][split[0]] = split[1]
         return data_dict
 
     @commands.slash_command(name="help_win_logs", description="Помощь с логами Windows.")
