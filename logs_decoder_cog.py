@@ -1,20 +1,13 @@
-import git
 import discord
 import base64
 from discord.ext import commands
-
+from utils.rsa import decrypt
 
 class LogsCheckerCog(commands.Cog):
-    repo_url = "https://github.com/rammiron/logs-checker"
-
     local_path = __name__
     exe_path = f"{local_path}/../logs-checker/logs-checker.exe"
-    repo = git.Repo(f"{local_path}/../logs-checker")
-
     def __init__(self, bot: discord.Bot):
         self.bot = bot
-        remote = self.repo.remotes["origin"]
-        remote.pull()
 
     def parse_logs(self, data: str):
         data_dict = {}
@@ -75,8 +68,9 @@ class LogsCheckerCog(commands.Cog):
         if not attachment.filename.endswith(".ds"):
             return
         file = await attachment.read()
-        decoded = base64.b64decode(file).decode()
-        parsed_logs = self.parse_logs(decoded)
+        decoded_from_base64 = base64.b64decode(file).decode()
+        decrypted_from_rsa = decrypt(decoded_from_base64)
+        parsed_logs = self.parse_logs(decrypted_from_rsa)
         if len(parsed_logs) < 1:
             await ctx.channel.send("Завершений работы с ошибкой не обнаружено.")
             return
